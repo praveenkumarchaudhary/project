@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Happy New Year Moon 🌙</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* Floating Stars */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: floatStar linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes floatStar {
+            from {
+                transform: translateY(100vh);
+            }
+
+            to {
+                transform: translateY(-10vh);
+            }
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(14px);
+            padding: 45px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 900px;
+            width: 90%;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 2s ease;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 44px;
+        }
+
+        .year {
+            font-size: 24px;
+            color: #ffd700;
+            margin: 15px 0 25px;
+        }
+
+        .message {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            color: #000;
+            border: none;
+            border-radius: 40px;
+            font-size: 17px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .surprise {
+            margin-top: 25px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        /* Fireworks */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        footer {
+            margin-top: 35px;
+            font-size: 15px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="fireworks"></canvas>
+
+    <div class="container">
+        <h1>🎆 Happy New Year 🎆</h1>
+        <div class="year">Dear Moon 🌙</div>
+
+        <p class="message">
+            My dear <b>Moon</b>, 🌙<br><br>
+            You are calm like the moon,
+            bright like the stars,
+            and beautiful like fireworks in the sky ✨
+            Thank you for being my best friend 💖
+        </p>
+
+        <button onclick="startMagic()">Start the Magic ✨</button>
+
+        <div class="surprise hidden" id="s1">
+            🎁 <b>Surprise 1</b><br>
+            May this New Year bring you smiles that never fade
+            and dreams that turn into reality 🌈
+        </div>
+
+        <div class="surprise hidden" id="s2">
+            🎁 <b>Surprise 2</b><br>
+            No matter where life takes us,
+            I promise our friendship will stay forever 🤝💖
+        </div>
+
+        <div class="surprise hidden" id="s3">
+            🎁 <b>Surprise 3</b><br>
+            You deserve all the happiness, love,
+            and success this world can offer 🌟
+        </div>
+
+        <footer>
+            With ❤️ from <b>Praveen Chaudhary</b>
+        </footer>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        /* Floating stars */
+        const starContainer = document.getElementById("stars");
+        for (let i = 0; i < 120; i++) {
+            let star = document.createElement("div");
+            star.className = "star";
+            star.style.left = Math.random() * 100 + "%";
+            star.style.animationDuration = (5 + Math.random() * 10) + "s";
+            star.style.opacity = Math.random();
+            starContainer.appendChild(star);
+        }
+
+        /* Fireworks */
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let fireworks = [];
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+
+        function Firework() {
+            this.x = rand(0, canvas.width);
+            this.y = rand(0, canvas.height / 2);
+            this.r = rand(2, 4);
+            this.life = 100;
+            this.color = ["#ff0043", "#14fc56", "#1e90ff", "#ffd700", "#ff7f50"][Math.floor(Math.random() * 5)];
+        }
+
+        Firework.prototype.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        };
+
+        Firework.prototype.update = function () {
+            this.r += 0.7;
+            this.life--;
+        };
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fireworks.forEach((f, i) => {
+                f.draw(); f.update();
+                if (f.life <= 0) fireworks.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        /* Magic Start */
+        function startMagic() {
+            document.getElementById("bgMusic").play();
+            document.getElementById("s1").classList.remove("hidden");
+            setTimeout(() => document.getElementById("s2").classList.remove("hidden"), 2000);
+            setTimeout(() => document.getElementById("s3").classList.remove("hidden"), 4000);
+
+            setInterval(() => {
+                for (let i = 0; i < 6; i++) fireworks.push(new Firework());
+            }, 350);
+        }
+    </script>
+
+</body>
+
+</html>
